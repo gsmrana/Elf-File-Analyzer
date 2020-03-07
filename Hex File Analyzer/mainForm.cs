@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Megamind.IO.FileFormat;
 
@@ -17,29 +18,116 @@ namespace Hex_File_Analyzer
 {
     public partial class MainForm : Form
     {
+        #region enum
+
+        public enum FileFormat
+        {
+            Unknown,
+            Binary,
+            IntelHex,
+            ElfFile
+        }
+
+        #endregion
+
         #region Data
 
         bool _verifyChesksum;
         int _dataBytesPerRecord;
-        string _currentfile = "";
+        string _currentfilename = "";
+        FileFormat _currntfileformat;
         IntelHex _ihex = new IntelHex();
+        ElfManager _elfManager;
+
+        string _cmdlineToolpath = "Tools";
+        static readonly Dictionary<FileFormat, string[]> SupportedFileList = new Dictionary<FileFormat, string[]>
+        {
+            { FileFormat.Binary,   new[] { ".bin" } },
+            { FileFormat.IntelHex, new[] { ".hex", ".eep" } },
+            { FileFormat.ElfFile,  new[] { ".elf", ".out", ".axf", ".o" } },
+        };
+
+        #endregion
+
+        #region ctor
+
+        public MainForm()
+        {
+            InitializeComponent();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                richTextBoxExEventLog.Autoscroll = false;
+                richTextBoxExEventLog.ForeColor = Color.Blue;
+                richTextBoxExEventLog.Font = new Font("Consolas", 9);
+            }
+            catch (Exception ex)
+            {
+                PopupException(ex.Message);
+            }
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            try
+            {
+                _verifyChesksum = Convert.ToInt32(ConfigurationManager.AppSettings["VerifyChecksum"]) > 0;
+                _dataBytesPerRecord = Convert.ToInt32(ConfigurationManager.AppSettings["DataBytesPerRecord"]);
+                _cmdlineToolpath = Path.Combine(Application.StartupPath, _cmdlineToolpath);
+                var args = Environment.GetCommandLineArgs();
+                if (args.Length > 1)
+                {
+                    TryShowFileContent(args[1]);
+                }
+            }
+            catch (Exception ex)
+            {
+                PopupException(ex.Message);
+            }
+        }
 
         #endregion
 
         #region Internal Methods
 
-        private static bool IsFileFormatSupported(string filename)
+        private void ViewerAppendText(string str, Color? color = null, bool appendNewLine = true)
         {
-            var fileExt = Path.GetExtension(filename);
-            var supportedExt = new List<string> { ".hex", ".eep" };
-            foreach (var ext in supportedExt)
+            var clr = color ?? Color.Blue;
+            if (appendNewLine) str += Environment.NewLine;
+            Invoke(new MethodInvoker(() =>
             {
-                if (string.Compare(fileExt, ext, true) == 0) return true;
-            }
-            return false;
+                richTextBoxExEventLog.AppendText(str, clr);
+            }));
         }
 
-        private static string ToFormatedBytes(long bytes)
+        private void ViewerClearText()
+        {
+            Invoke(new MethodInvoker(() =>
+            {
+                richTextBoxExEventLog.Clear();
+            }));
+        }
+
+        private void UpdateProgress(int percent)
+        {
+            Invoke(new MethodInvoker(() =>
+            {
+                toolStripStatusLabelPercent.Text = percent + "%";
+                toolStripProgressBar1.Value = percent;
+            }));
+        }
+
+        private static FileFormat GetFileFormat(string filename)
+        {
+            var ext = Path.GetExtension(filename);
+            var filetype = SupportedFileList.FirstOrDefault(p => p.Value.Contains(ext.ToLower()));
+            return filetype.Key;
+        }
+
+        private static string GetSizeString(long bytes)
         {
             string str;
             if (bytes >= (1024 * 1024)) str = string.Format("{0} [{1:0.00} MB]", bytes, bytes / (1024f * 1024f));
@@ -48,40 +136,140 @@ namespace Hex_File_Analyzer
             return str;
         }
 
-        private void TryShowHexInfo(string filename)
+        public static string ByteArrayToFormatedString(byte[] bytes)
         {
-            this.UseWaitCursor = true;
-            Application.DoEvents();
+            var sb = new StringBuilder();
+            foreach (var item in bytes)
+            {
+                if (item == 10) sb.Append("<LF>");
+                else if (item == 13) sb.Append("<CR>");
+                else if (item < 32 || item > 126) sb.AppendFormat("<{0:X2}>", item);
+                else sb.AppendFormat("{0}", (char)item);
+            }
+            return sb.ToString();
+        }
 
+        public static string ByteArrayToHexString(byte[] bytes, string separator = "")
+        {
+            return BitConverter.ToString(bytes).Replace("-", separator);
+        }
+
+        public static byte[] HexStringToByteArray(string hexstr)
+        {
+            hexstr.Trim();
+            hexstr = hexstr.Replace("-", "");
+            hexstr = hexstr.Replace(" ", "");
+            return Enumerable.Range(0, hexstr.Length)
+                             .Where(x => x % 2 == 0)
+                             .Select(x => Convert.ToByte(hexstr.Substring(x, 2), 16))
+                             .ToArray();
+        }
+
+        private void PopupException(string message, string caption = "Exception")
+        {
+            Invoke(new Action(() =>
+            {
+                MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }));
+        }
+
+        private void TryShowFileContent(string filename)
+        {
             try
             {
-                if (!File.Exists(filename)) throw new Exception("File not found!");
-                if (!IsFileFormatSupported(filename)) throw new Exception("File format not supported!");
-                ShowHexInfoGrid(filename);
+                if (!File.Exists(filename))
+                {
+                    throw new Exception("File not found!");
+                }
+
+                var fileformat = GetFileFormat(filename);
+                if (fileformat == FileFormat.Unknown)
+                {
+                    throw new Exception("File format not supported!");
+                }
+
+                _currentfilename = filename;
+                _currntfileformat = fileformat;
+                UpdateFileContentToDisplay();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                PopupException(ex.Message);
             }
-
-            this.UseWaitCursor = false;
-            Cursor.Current = Cursors.Default;
-            Application.DoEvents();
         }
 
-        private void ShowHexInfoGrid(string filename)
+        private void UpdateFileContentToDisplay()
         {
-            this.Text = Path.GetFileName(filename) + " - " + Assembly.GetEntryAssembly().GetName().Name;
-            Application.DoEvents();
+            Task.Run(() =>
+            {
+                Invoke(new MethodInvoker(() =>
+                {
+                    UseWaitCursor = true;
+                    Cursor.Current = Cursors.AppStarting;
+                    Text = Path.GetFileName(_currentfilename) + " - " + Assembly.GetEntryAssembly().GetName().Name;
+                }));
 
+                try
+                {
+                    ViewerClearText();
+                    switch (_currntfileformat)
+                    {
+                        case FileFormat.IntelHex:
+                            ShowHexFile(_currentfilename);
+                            break;
+                        case FileFormat.Binary:
+                            ShowBinaryFile(_currentfilename);
+                            break;
+                        case FileFormat.ElfFile:
+                            _elfManager = new ElfManager(_currentfilename, _cmdlineToolpath);
+                            ViewerAppendText(_elfManager.GetAllInfo());
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    PopupException(ex.Message);
+                }
+
+                Invoke(new MethodInvoker(() =>
+                {
+                    UseWaitCursor = false;
+                    Cursor.Current = Cursors.Default;
+                }));
+            });
+        }
+
+        private void ShowBinaryFile(string filename)
+        {
+            var bytes = File.ReadAllBytes(_currentfilename);
+            var offset = 0;
+            var blockSize = 32;
+            var remaining_bytes = bytes.Length;
+            ViewerAppendText(" Offset(h)     | Data (h)");
+            ViewerAppendText("------------------");
+            UpdateProgress(0);
+            while (remaining_bytes > 0)
+            {
+                if (remaining_bytes < blockSize) blockSize = remaining_bytes;
+                ViewerAppendText(string.Format("{0:X4} : {1}", offset,
+                    BitConverter.ToString(bytes, offset, blockSize).Replace("-", "")));
+                Application.DoEvents();
+                offset += blockSize;
+                remaining_bytes -= blockSize;
+                UpdateProgress((offset * 100) / bytes.Length);
+            }
+            UpdateProgress(100);
+        }
+
+        private void ShowHexFile(string filename)
+        {
             _ihex = new IntelHex();
             _ihex.Read(filename, _verifyChesksum);
-            Application.DoEvents();
-
             long totalmemused = 0;
             long totalmemblank = 0;
             var blankspaces = new long[_ihex.MemBlocks.Count];
             var sortedBlocks = _ihex.MemBlocks.OrderBy(p => p.Start).ToList();
+            UpdateProgress(0);
 
             // calculate total and blank spaces
             for (int i = 0; i < sortedBlocks.Count; i++)
@@ -98,84 +286,43 @@ namespace Hex_File_Analyzer
 
             // show summary
             var count = 0;
-            dataGridViewSummary.Rows.Clear();
-            Application.DoEvents();
+            ViewerAppendText("Memory Block Summary:");
+            ViewerAppendText(" # | Start      | End        |  Size \t\t| Blank Before");
+            ViewerAppendText("-------------------------------------------------------------------");
+            UpdateProgress(5);
             foreach (var b in _ihex.MemBlocks)
             {
                 count++;
-                dataGridViewSummary.Rows.Add(string.Format("{0:00}", count), string.Format("0x{0:X4}", b.Start),
-                    string.Format("0x{0:X4}", b.End), ToFormatedBytes(b.Size), ToFormatedBytes(blankspaces[count - 1]));
+                ViewerAppendText(string.Format("{0:00} | 0x{1:X8} | 0x{2:X8} | {3} \t| {4}", count, b.Start, b.End,
+                    GetSizeString(b.Size), GetSizeString(blankspaces[count - 1])));
             }
-            dataGridViewSummary.Rows.Add("", "", "Total:", ToFormatedBytes(totalmemused), ToFormatedBytes(totalmemblank));
-            dataGridViewSummary.ClearSelection();
+            ViewerAppendText("-------------------------------------------------------------------");
+            ViewerAppendText(string.Format("\t\t\t   Total: {0} \t| {1}", GetSizeString(totalmemused), GetSizeString(totalmemblank)));
 
             // show records
             count = 0;
-            dataGridViewRecord.Rows.Clear();
-            Application.DoEvents();
+            ViewerAppendText("\rMemory Block Data:");
+            ViewerAppendText(" #   | Record | Offset |  Data");
+            ViewerAppendText("-------------------------------------------------------------------");
+            UpdateProgress(10);
             foreach (var r in _ihex.Records)
             {
                 count++;
-                dataGridViewRecord.Rows.Add(string.Format("{0:0000}", count), string.Format("{0} [{1}]", r.RecordType, (RecordType)r.RecordType),
-                    string.Format("0x{0:X4}", r.Address), string.Format("{0:00}", r.DataCount), BitConverter.ToString(r.DataBlock).Replace("-", ""));
+                ViewerAppendText(string.Format("{0:0000} | {1}[{2}] | 0x{3:X4} | {4:00}", count, r.RecordType,
+                    (RecordType)r.RecordType, r.Address, BitConverter.ToString(r.DataBlock).Replace("-", "")));
+                UpdateProgress((count * 100)/ _ihex.Records.Count);
             }
-            dataGridViewRecord.ClearSelection();
-            toolStrip1.Focus();
-            Application.DoEvents();
-        }
-
-        #endregion
-
-        #region ctor
-
-        public MainForm()
-        {
-            InitializeComponent();
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                dataGridViewSummary.Font = new Font("Consolas", 9);
-                dataGridViewSummary.ForeColor = Color.Blue;
-
-                dataGridViewRecord.Font = new Font("Consolas", 9);
-                dataGridViewRecord.ForeColor = Color.DarkMagenta;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void MainForm_Shown(object sender, EventArgs e)
-        {
-            try
-            {
-                _verifyChesksum = Convert.ToInt32(ConfigurationManager.AppSettings["VerifyChecksum"]) > 0;
-                _dataBytesPerRecord = Convert.ToInt32(ConfigurationManager.AppSettings["DataBytesPerRecord"]);
-
-                var args = Environment.GetCommandLineArgs();
-                if (args.Length > 1)
-                {
-                    if (IsFileFormatSupported(args[1]))
-                    {
-                        _currentfile = args[1];
-                        TryShowHexInfo(_currentfile);
-                    }
-                    else MessageBox.Show("File format not supported.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            UpdateProgress(100);
         }
 
         #endregion
 
         #region Menu Strip Events
+
+        private void AutoscrollToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBoxExEventLog.Autoscroll = AutoscrollToolStripMenuItem.Checked;
+        }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -195,11 +342,20 @@ namespace Hex_File_Analyzer
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Hex Files (*.hex)|*.hex|Eep files (*.eep)|*.eep|All files (*.*)|*.*";
+                ofd.Filter =
+                    "Firmware (all types)|*.hex;*.eep;*.bin;*.elf;*.out;*.axf;*.o|" +
+                    "Hex Files (*.hex)|*.hex|" +
+                    "Eep files (*.eep)|*.eep|" +
+                    "Bin files (*.bin)|*.bin|" +
+                    "Elf files (*.elf)|*.elf|" +
+                    "Out files (*.out)|*.out|" +
+                    "Axf files (*.axf)|*.axf|" +
+                    "Obj files (*.o)|*.o|" +
+                    "All files (*.*)|*.*";
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    _currentfile = ofd.FileName;
-                    TryShowHexInfo(_currentfile);
+                    _currentfilename = ofd.FileName;
+                    TryShowFileContent(_currentfilename);
                 }
             }
         }
@@ -208,8 +364,12 @@ namespace Hex_File_Analyzer
         {
             using (var sfd = new SaveFileDialog())
             {
-                sfd.Filter = "Hex files (*.hex)|*.hex|Eep files (*.eep)|*.eep|Binary files (*.bin)|*.bin|All files (*.*)|*.*";
-                sfd.FileName = Path.GetFileName(_currentfile);
+                sfd.Filter =
+                    "Hex files (*.hex)|*.hex|" +
+                    "Eep files (*.eep)|*.eep|" +
+                    "Binary files (*.bin)|*.bin|" +
+                    "All files (*.*)|*.*";
+                sfd.FileName = Path.GetFileName(_currentfilename);
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     try
@@ -221,7 +381,7 @@ namespace Hex_File_Analyzer
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        PopupException(ex.Message);
                     }
                 }
             }
@@ -229,39 +389,50 @@ namespace Hex_File_Analyzer
 
         private void ReloadToolStripButton_Click(object sender, EventArgs e)
         {
-            TryShowHexInfo(_currentfile);
+            TryShowFileContent(_currentfilename);
         }
 
         private void HelpToolStripButton_Click(object sender, EventArgs e)
         {
-            var info = string.Format("{0} {1}\r\nDeveloped by: \r\nGSM Rana \r\ngithub.com/gsmrana", 
-                Assembly.GetEntryAssembly().GetName().Name, 
+            var info = string.Format("{0} {1}\r\nDeveloped by: \r\nGSM Rana \r\ngithub.com/gsmrana",
+                Assembly.GetEntryAssembly().GetName().Name,
                 Assembly.GetEntryAssembly().GetName().Version);
             MessageBox.Show(info, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void GetChksmToolStripButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                toolStripTextBoxChecksum.Clear();
-                var data = toolStripTextBoxData.Text;
-                data = data.Replace("-", "");
-                data = data.Replace("0x", "");
-                toolStripTextBoxData.Text = data;
+        #endregion
 
-                var chksm = IntelHex.CalculateChecksum(data);
-                toolStripTextBoxChecksum.Text = chksm.ToString("X2");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+        #region RichTextBoxEx Events
+
+        private void RichTextBoxExEventLog_SelectionChanged(object sender, EventArgs e)
+        {
+            labelLogSelLine.Text = string.Format("Start: {0}", richTextBoxExEventLog.SelectionStart);
+            labelLogSelLength.Text = string.Format("Length: {0}", richTextBoxExEventLog.SelectionLength);
         }
 
         #endregion
 
-        #region File drag n drop
+        #region RichTextBoxEx Context Menu
+
+        private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            CopyToolStripMenuItem.Enabled = richTextBoxExEventLog.SelectionLength > 0;
+            CopyAllToolStripMenuItem.Enabled = richTextBoxExEventLog.Text.Length > 0;
+        }
+
+        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBoxExEventLog.Copy();
+        }
+
+        private void CopyAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(richTextBoxExEventLog.Text);
+        }
+
+        #endregion
+
+        #region File Drag and Drop
 
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
@@ -273,15 +444,11 @@ namespace Hex_File_Analyzer
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (IsFileFormatSupported(files[0]))
-                {
-                    _currentfile = files[0];
-                    TryShowHexInfo(_currentfile);
-                }
-                else MessageBox.Show("File format not supported.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                TryShowFileContent(files[0]);
             }
         }
 
         #endregion
+
     }
 }
