@@ -120,12 +120,14 @@ namespace Hex_File_Analyzer
             }));
         }
 
+        int _prevpercent = 0;
         private void UpdateProgress(int percent)
         {
+            if (percent == _prevpercent) return;
             Invoke(new MethodInvoker(() =>
             {
-                toolStripStatusLabelPercent.Text = percent + "%";
                 toolStripProgressBar1.Value = percent;
+                _prevpercent = percent;
             }));
         }
 
@@ -240,6 +242,7 @@ namespace Hex_File_Analyzer
                             break;
                         case FileFormat.ElfFile:
                             _elfManager = new ElfManager(_currentfilename);
+                            ViewerAppendText(_elfManager.GetSizeInfo());
                             ViewerAppendText(_elfManager.GetAllHeadersInfo());
                             break;
                     }
@@ -267,15 +270,16 @@ namespace Hex_File_Analyzer
             ViewerAppendText("Offset(h): " + BitConverter.ToString(Enumerable.Range(0, blockSize).Select(p => (byte)p).ToArray()).Replace("-", ""));
             ViewerAppendText("---------------------------------------------------------------------------");
             UpdateProgress(0);
+            var sb = new StringBuilder();
             while (remaining_bytes > 0)
             {
                 if (remaining_bytes < blockSize) blockSize = remaining_bytes;
-                ViewerAppendText(string.Format("{0:X8} : {1}", offset,
-                    BitConverter.ToString(bytes, offset, blockSize).Replace("-", "")));
+                sb.AppendFormat("{0:X8} : {1}\r", offset, BitConverter.ToString(bytes, offset, blockSize).Replace("-", ""));
                 offset += blockSize;
                 remaining_bytes -= blockSize;
                 UpdateProgress((offset * 100) / bytes.Length);
             }
+            ViewerAppendText(sb.ToString());
             UpdateProgress(100);
         }
 
@@ -322,13 +326,15 @@ namespace Hex_File_Analyzer
             ViewerAppendText(" #   | Record | Offset | Data");
             ViewerAppendText("---------------------------------------------------------------------------");
             UpdateProgress(10);
+            var sb = new StringBuilder();
             foreach (var r in _ihex.Records)
             {
                 count++;
-                ViewerAppendText(string.Format("{0:0000} | {1}[{2}] | 0x{3:X4} | {4:00}", count, r.RecordType,
-                    ((RecordType)r.RecordType).ToString().Substring(0, 3), r.Address, BitConverter.ToString(r.DataBlock).Replace("-", "")));
+                sb.AppendFormat("{0:0000} | {1}[{2}] | 0x{3:X4} | {4:00}\r", count, r.RecordType,
+                    ((RecordType)r.RecordType).ToString().Substring(0, 3), r.Address, BitConverter.ToString(r.DataBlock).Replace("-", ""));
                 UpdateProgress((count * 100) / _ihex.Records.Count);
             }
+            ViewerAppendText(sb.ToString());
             UpdateProgress(100);
         }
 
@@ -379,6 +385,21 @@ namespace Hex_File_Analyzer
         #endregion
 
         #region Menu Strip Operation
+
+        private void GetSizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ViewerClearText();
+                ViewerAppendText(string.Format("File Size: {0}", GetSizeString(new FileInfo(_currentfilename).Length)), Color.DarkMagenta);
+                _elfManager = new ElfManager(_currentfilename);
+                ViewerAppendText(_elfManager.GetSizeInfo());
+            }
+            catch (Exception ex)
+            {
+                PopupException(ex.Message);
+            }
+        }
 
         private void ReadHeadersToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -524,8 +545,9 @@ namespace Hex_File_Analyzer
 
         private void RichTextBoxExEventLog_SelectionChanged(object sender, EventArgs e)
         {
-            labelLogSelLine.Text = string.Format("Start: {0}", richTextBoxExEventLog.SelectionStart);
-            labelLogSelLength.Text = string.Format("Length: {0}", richTextBoxExEventLog.SelectionLength);
+            toolStripStatusLabelStart.Text = string.Format("Start: {0}", richTextBoxExEventLog.SelectionStart);
+            toolStripStatusLabelSel.Text = string.Format("Sel: {0}", richTextBoxExEventLog.SelectionLength);
+            toolStripStatusLabelLength.Text = string.Format("Length: {0}", richTextBoxExEventLog.TextLength);
         }
 
         #endregion
@@ -565,6 +587,7 @@ namespace Hex_File_Analyzer
                 TryShowFileContent(files[0]);
             }
         }
+
 
 
 

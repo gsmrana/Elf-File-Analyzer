@@ -44,6 +44,7 @@
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AutoscrollToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.operationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.getSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.readHeadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getDisassemblyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,11 +74,12 @@
             this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.saveAsToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.reloadToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripComboBoxCmdline = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButtonCmdExecute = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonCopyText = new System.Windows.Forms.ToolStripButton();
+            this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.richTextBoxExEventLog = new Serial_COM.RichTextBoxEx();
             this.ContextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -85,10 +87,9 @@
             this.CopyAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolStripStatusLabelPercent = new System.Windows.Forms.ToolStripStatusLabel();
-            this.labelLogSelLine = new System.Windows.Forms.ToolStripStatusLabel();
-            this.labelLogSelLength = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripStatusLabelStart = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelSel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelLength = new System.Windows.Forms.ToolStripStatusLabel();
             this.tableLayoutPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -225,11 +226,19 @@
             // operationToolStripMenuItem
             // 
             this.operationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.getSizeToolStripMenuItem,
             this.readHeadersToolStripMenuItem,
             this.getDisassemblyToolStripMenuItem});
             this.operationToolStripMenuItem.Name = "operationToolStripMenuItem";
             this.operationToolStripMenuItem.Size = new System.Drawing.Size(72, 18);
             this.operationToolStripMenuItem.Text = "Operation";
+            // 
+            // getSizeToolStripMenuItem
+            // 
+            this.getSizeToolStripMenuItem.Name = "getSizeToolStripMenuItem";
+            this.getSizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.getSizeToolStripMenuItem.Text = "Get Size";
+            this.getSizeToolStripMenuItem.Click += new System.EventHandler(this.GetSizeToolStripMenuItem_Click);
             // 
             // readHeadersToolStripMenuItem
             // 
@@ -456,15 +465,6 @@
             this.reloadToolStripButton.Text = "&Disassembly";
             this.reloadToolStripButton.Click += new System.EventHandler(this.DisassemblyToolStripButton_Click);
             // 
-            // helpToolStripButton
-            // 
-            this.helpToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripButton.Image")));
-            this.helpToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.helpToolStripButton.Name = "helpToolStripButton";
-            this.helpToolStripButton.Size = new System.Drawing.Size(63, 22);
-            this.helpToolStripButton.Text = "&About";
-            this.helpToolStripButton.Click += new System.EventHandler(this.AboutToolStripButton_Click);
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -485,6 +485,11 @@
             this.toolStripButtonCmdExecute.Text = "&Execute";
             this.toolStripButtonCmdExecute.Click += new System.EventHandler(this.ToolStripButtonCmdExecute_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripButtonCopyText
             // 
             this.toolStripButtonCopyText.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonCopyText.Image")));
@@ -493,6 +498,15 @@
             this.toolStripButtonCopyText.Size = new System.Drawing.Size(85, 22);
             this.toolStripButtonCopyText.Text = "Copy Text";
             this.toolStripButtonCopyText.Click += new System.EventHandler(this.ToolStripButtonCopyText_Click);
+            // 
+            // helpToolStripButton
+            // 
+            this.helpToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripButton.Image")));
+            this.helpToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.helpToolStripButton.Name = "helpToolStripButton";
+            this.helpToolStripButton.Size = new System.Drawing.Size(63, 22);
+            this.helpToolStripButton.Text = "&About";
+            this.helpToolStripButton.Click += new System.EventHandler(this.AboutToolStripButton_Click);
             // 
             // groupBox1
             // 
@@ -546,9 +560,9 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripProgressBar1,
-            this.toolStripStatusLabelPercent,
-            this.labelLogSelLine,
-            this.labelLogSelLength});
+            this.toolStripStatusLabelStart,
+            this.toolStripStatusLabelSel,
+            this.toolStripStatusLabelLength});
             this.statusStrip1.Location = new System.Drawing.Point(0, 691);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(784, 20);
@@ -560,30 +574,26 @@
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 14);
             // 
-            // toolStripStatusLabelPercent
+            // toolStripStatusLabelStart
             // 
-            this.toolStripStatusLabelPercent.Margin = new System.Windows.Forms.Padding(5, 3, 0, 2);
-            this.toolStripStatusLabelPercent.Name = "toolStripStatusLabelPercent";
-            this.toolStripStatusLabelPercent.Size = new System.Drawing.Size(23, 15);
-            this.toolStripStatusLabelPercent.Text = "0%";
+            this.toolStripStatusLabelStart.Margin = new System.Windows.Forms.Padding(20, 3, 0, 2);
+            this.toolStripStatusLabelStart.Name = "toolStripStatusLabelStart";
+            this.toolStripStatusLabelStart.Size = new System.Drawing.Size(43, 15);
+            this.toolStripStatusLabelStart.Text = "Start: 0";
             // 
-            // labelLogSelLine
+            // toolStripStatusLabelSel
             // 
-            this.labelLogSelLine.Margin = new System.Windows.Forms.Padding(20, 3, 0, 2);
-            this.labelLogSelLine.Name = "labelLogSelLine";
-            this.labelLogSelLine.Size = new System.Drawing.Size(43, 15);
-            this.labelLogSelLine.Text = "Start: 0";
+            this.toolStripStatusLabelSel.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
+            this.toolStripStatusLabelSel.Name = "toolStripStatusLabelSel";
+            this.toolStripStatusLabelSel.Size = new System.Drawing.Size(34, 15);
+            this.toolStripStatusLabelSel.Text = "Sel: 0";
             // 
-            // labelLogSelLength
+            // toolStripStatusLabelLength
             // 
-            this.labelLogSelLength.Name = "labelLogSelLength";
-            this.labelLogSelLength.Size = new System.Drawing.Size(56, 15);
-            this.labelLogSelLength.Text = "Length: 0";
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            this.toolStripStatusLabelLength.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
+            this.toolStripStatusLabelLength.Name = "toolStripStatusLabelLength";
+            this.toolStripStatusLabelLength.Size = new System.Drawing.Size(56, 15);
+            this.toolStripStatusLabelLength.Text = "Length: 0";
             // 
             // MainForm
             // 
@@ -656,12 +666,12 @@
         private System.Windows.Forms.ToolStripMenuItem disableToolStripMenuItem;
         private Serial_COM.RichTextBoxEx richTextBoxExEventLog;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel labelLogSelLine;
-        private System.Windows.Forms.ToolStripStatusLabel labelLogSelLength;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelSel;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelLength;
         private System.Windows.Forms.ContextMenuStrip ContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem CopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem CopyAllToolStripMenuItem;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelPercent;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelStart;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
         private System.Windows.Forms.ToolStripMenuItem AutoscrollToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonCmdExecute;
@@ -676,6 +686,7 @@
         private System.Windows.Forms.ToolStripMenuItem getDisassemblyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem getSizeToolStripMenuItem;
     }
 }
 

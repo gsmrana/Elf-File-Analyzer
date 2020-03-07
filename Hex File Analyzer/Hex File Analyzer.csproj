@@ -113,6 +113,9 @@
     <None Include="Tools\arm-none-eabi-readelf.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="Tools\arm-none-eabi-size.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Zerode-Plump.ico" />
   </ItemGroup>
   <ItemGroup>
