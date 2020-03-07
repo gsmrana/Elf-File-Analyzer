@@ -1,4 +1,4 @@
-﻿namespace Hex_File_Analyzer
+﻿namespace Elf_File_Analyzer
 {
     partial class MainForm
     {
@@ -236,21 +236,21 @@
             // getSizeToolStripMenuItem
             // 
             this.getSizeToolStripMenuItem.Name = "getSizeToolStripMenuItem";
-            this.getSizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.getSizeToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.getSizeToolStripMenuItem.Text = "Get Size";
             this.getSizeToolStripMenuItem.Click += new System.EventHandler(this.GetSizeToolStripMenuItem_Click);
             // 
             // readHeadersToolStripMenuItem
             // 
             this.readHeadersToolStripMenuItem.Name = "readHeadersToolStripMenuItem";
-            this.readHeadersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.readHeadersToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.readHeadersToolStripMenuItem.Text = "Read Headers";
             this.readHeadersToolStripMenuItem.Click += new System.EventHandler(this.ReadHeadersToolStripMenuItem_Click);
             // 
             // getDisassemblyToolStripMenuItem
             // 
             this.getDisassemblyToolStripMenuItem.Name = "getDisassemblyToolStripMenuItem";
-            this.getDisassemblyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.getDisassemblyToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.getDisassemblyToolStripMenuItem.Text = "Get Disassembly";
             this.getDisassemblyToolStripMenuItem.Click += new System.EventHandler(this.GetDisassemblyToolStripMenuItem_Click);
             // 
@@ -606,7 +606,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "Hex File Analyzer";
+            this.Text = "Elf File Analyzer";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);

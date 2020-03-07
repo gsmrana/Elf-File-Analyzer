@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Hex_File_Analyzer
+namespace Elf_File_Analyzer
 {
     static class Program
     {

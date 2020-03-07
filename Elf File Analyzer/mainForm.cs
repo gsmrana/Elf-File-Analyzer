@@ -14,7 +14,7 @@ using System.Windows.Forms;
 using Megamind.IO.FileFormat;
 
 
-namespace Hex_File_Analyzer
+namespace Elf_File_Analyzer
 {
     public partial class MainForm : Form
     {
@@ -187,25 +187,14 @@ namespace Hex_File_Analyzer
         private void TryShowFileContent(string filename)
         {
             if (_optInProgress)
-            {
                 return;
-            }
 
             try
             {
                 if (!File.Exists(filename))
-                {
                     throw new Exception("File not found!");
-                }
-
-                var fileformat = GetFileFormat(filename);
-                if (fileformat == FileFormat.Unknown)
-                {
-                    throw new Exception("File format not supported!");
-                }
-
                 _currentfilename = filename;
-                _currntfileformat = fileformat;
+                _currntfileformat = GetFileFormat(filename);
                 UpdateFileContentToDisplay();
             }
             catch (Exception ex)

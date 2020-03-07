@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Hex File Analyzer")]
-[assembly: AssemblyDescription("A tool for intel hex file analyzing")]
+[assembly: AssemblyTitle("Elf File Analyzer")]
+[assembly: AssemblyDescription("A windows tool for analyzing elf, hex and binary files")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GSM Rana")]
-[assembly: AssemblyProduct("Hex File Analyzer")]
+[assembly: AssemblyProduct("Elf File Analyzer")]
 [assembly: AssemblyCopyright("©  GSM Rana 2016")]
 [assembly: AssemblyTrademark("GSM Rana Project")]
 [assembly: AssemblyCulture("")]
