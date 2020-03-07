@@ -32,14 +32,17 @@ namespace Hex_File_Analyzer
 
         #region Data
 
+        bool _optInProgress;
         bool _verifyChesksum;
         int _dataBytesPerRecord;
         string _currentfilename = "";
         FileFormat _currntfileformat;
         IntelHex _ihex = new IntelHex();
-        ElfManager _elfManager;
+        ElfManager _elfManager = new ElfManager();
 
-        string _cmdlineToolpath = "Tools";
+        readonly string SourceDirKeyword = "$SRCDIR";
+        readonly string SourceFileKeyword = "$SRCFILE";
+        readonly string CmdlineToolBuildinpath = "Tools";
         static readonly Dictionary<FileFormat, string[]> SupportedFileList = new Dictionary<FileFormat, string[]>
         {
             { FileFormat.Binary,   new[] { ".bin" } },
@@ -60,9 +63,15 @@ namespace Hex_File_Analyzer
         {
             try
             {
+                richTextBoxExEventLog.WordWrap = false;
                 richTextBoxExEventLog.Autoscroll = false;
                 richTextBoxExEventLog.ForeColor = Color.Blue;
                 richTextBoxExEventLog.Font = new Font("Consolas", 9);
+
+                ElfManager.CmdlineToolPath = Path.Combine(Application.StartupPath, CmdlineToolBuildinpath);
+                toolStripComboBoxCmdline.Items.AddRange(ElfManager.CmdLineTools.Keys.ToArray());
+                if (toolStripComboBoxCmdline.Items.Count > 0)
+                    toolStripComboBoxCmdline.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -76,7 +85,7 @@ namespace Hex_File_Analyzer
             {
                 _verifyChesksum = Convert.ToInt32(ConfigurationManager.AppSettings["VerifyChecksum"]) > 0;
                 _dataBytesPerRecord = Convert.ToInt32(ConfigurationManager.AppSettings["DataBytesPerRecord"]);
-                _cmdlineToolpath = Path.Combine(Application.StartupPath, _cmdlineToolpath);
+
                 var args = Environment.GetCommandLineArgs();
                 if (args.Length > 1)
                 {
@@ -122,8 +131,8 @@ namespace Hex_File_Analyzer
 
         private static FileFormat GetFileFormat(string filename)
         {
-            var ext = Path.GetExtension(filename);
-            var filetype = SupportedFileList.FirstOrDefault(p => p.Value.Contains(ext.ToLower()));
+            var ext = Path.GetExtension(filename).ToLower();
+            var filetype = SupportedFileList.FirstOrDefault(p => p.Value.Contains(ext));
             return filetype.Key;
         }
 
@@ -175,6 +184,11 @@ namespace Hex_File_Analyzer
 
         private void TryShowFileContent(string filename)
         {
+            if (_optInProgress)
+            {
+                return;
+            }
+
             try
             {
                 if (!File.Exists(filename))
@@ -202,27 +216,31 @@ namespace Hex_File_Analyzer
         {
             Task.Run(() =>
             {
+                _optInProgress = true;
                 Invoke(new MethodInvoker(() =>
                 {
                     UseWaitCursor = true;
                     Cursor.Current = Cursors.AppStarting;
-                    Text = Path.GetFileName(_currentfilename) + " - " + Assembly.GetEntryAssembly().GetName().Name;
+                    Text = string.Format("{0} - {1}", Path.GetFileName(_currentfilename),
+                        Assembly.GetEntryAssembly().GetName().Name);
                 }));
 
                 try
                 {
                     ViewerClearText();
+                    ViewerAppendText(string.Format("File Size: {0}", GetSizeString(new FileInfo(_currentfilename).Length)), Color.DarkMagenta);
                     switch (_currntfileformat)
                     {
-                        case FileFormat.IntelHex:
-                            ShowHexFile(_currentfilename);
-                            break;
                         case FileFormat.Binary:
                             ShowBinaryFile(_currentfilename);
                             break;
+                        case FileFormat.IntelHex:
+
+                            ShowHexFile(_currentfilename);
+                            break;
                         case FileFormat.ElfFile:
-                            _elfManager = new ElfManager(_currentfilename, _cmdlineToolpath);
-                            ViewerAppendText(_elfManager.GetAllInfo());
+                            _elfManager = new ElfManager(_currentfilename);
+                            ViewerAppendText(_elfManager.GetAllHeadersInfo());
                             break;
                     }
                 }
@@ -236,24 +254,24 @@ namespace Hex_File_Analyzer
                     UseWaitCursor = false;
                     Cursor.Current = Cursors.Default;
                 }));
+                _optInProgress = false;
             });
         }
 
         private void ShowBinaryFile(string filename)
         {
-            var bytes = File.ReadAllBytes(_currentfilename);
+            var bytes = File.ReadAllBytes(filename);
             var offset = 0;
             var blockSize = 32;
             var remaining_bytes = bytes.Length;
-            ViewerAppendText(" Offset(h)     | Data (h)");
-            ViewerAppendText("------------------");
+            ViewerAppendText("Offset(h): " + BitConverter.ToString(Enumerable.Range(0, blockSize).Select(p => (byte)p).ToArray()).Replace("-", ""));
+            ViewerAppendText("---------------------------------------------------------------------------");
             UpdateProgress(0);
             while (remaining_bytes > 0)
             {
                 if (remaining_bytes < blockSize) blockSize = remaining_bytes;
-                ViewerAppendText(string.Format("{0:X4} : {1}", offset,
+                ViewerAppendText(string.Format("{0:X8} : {1}", offset,
                     BitConverter.ToString(bytes, offset, blockSize).Replace("-", "")));
-                Application.DoEvents();
                 offset += blockSize;
                 remaining_bytes -= blockSize;
                 UpdateProgress((offset * 100) / bytes.Length);
@@ -287,30 +305,29 @@ namespace Hex_File_Analyzer
             // show summary
             var count = 0;
             ViewerAppendText("Memory Block Summary:");
-            ViewerAppendText(" # | Start      | End        |  Size \t\t| Blank Before");
-            ViewerAppendText("-------------------------------------------------------------------");
+            ViewerAppendText(" # | Start      | End        |  Size");
+            ViewerAppendText("---------------------------------------------------");
             UpdateProgress(5);
             foreach (var b in _ihex.MemBlocks)
             {
                 count++;
-                ViewerAppendText(string.Format("{0:00} | 0x{1:X8} | 0x{2:X8} | {3} \t| {4}", count, b.Start, b.End,
-                    GetSizeString(b.Size), GetSizeString(blankspaces[count - 1])));
+                ViewerAppendText(string.Format("{0:00} | 0x{1:X8} | 0x{2:X8} | {3}", count, b.Start, b.End, GetSizeString(b.Size)));
             }
-            ViewerAppendText("-------------------------------------------------------------------");
-            ViewerAppendText(string.Format("\t\t\t   Total: {0} \t| {1}", GetSizeString(totalmemused), GetSizeString(totalmemblank)));
+            ViewerAppendText("---------------------------------------------------");
+            ViewerAppendText(string.Format("\t\t\t   Total: {0} \t", GetSizeString(totalmemused)));
 
             // show records
             count = 0;
             ViewerAppendText("\rMemory Block Data:");
-            ViewerAppendText(" #   | Record | Offset |  Data");
-            ViewerAppendText("-------------------------------------------------------------------");
+            ViewerAppendText(" #   | Record | Offset | Data");
+            ViewerAppendText("---------------------------------------------------------------------------");
             UpdateProgress(10);
             foreach (var r in _ihex.Records)
             {
                 count++;
                 ViewerAppendText(string.Format("{0:0000} | {1}[{2}] | 0x{3:X4} | {4:00}", count, r.RecordType,
-                    (RecordType)r.RecordType, r.Address, BitConverter.ToString(r.DataBlock).Replace("-", "")));
-                UpdateProgress((count * 100)/ _ihex.Records.Count);
+                    ((RecordType)r.RecordType).ToString().Substring(0, 3), r.Address, BitConverter.ToString(r.DataBlock).Replace("-", "")));
+                UpdateProgress((count * 100) / _ihex.Records.Count);
             }
             UpdateProgress(100);
         }
@@ -319,6 +336,36 @@ namespace Hex_File_Analyzer
 
         #region Menu Strip Events
 
+        private void NewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(Assembly.GetExecutingAssembly().Location);
+        }
+
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenToolStripButton_Click(sender, e);
+        }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveToolStripButton_Click(sender, e);
+        }
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void ClearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBoxExEventLog.Clear();
+        }
+
+        private void ReloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryShowFileContent(_currentfilename);
+        }
+
         private void AutoscrollToolStripMenuItem_Click(object sender, EventArgs e)
         {
             richTextBoxExEventLog.Autoscroll = AutoscrollToolStripMenuItem.Checked;
@@ -326,17 +373,26 @@ namespace Hex_File_Analyzer
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HelpToolStripButton_Click(this, e);
+            AboutToolStripButton_Click(this, e);
+        }
+
+        #endregion
+
+        #region Menu Strip Operation
+
+        private void ReadHeadersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryShowFileContent(_currentfilename);
+        }
+
+        private void GetDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DisassemblyToolStripButton_Click(sender, e);
         }
 
         #endregion
 
         #region ToolStrip Events
-
-        private void NewToolStripButton_Click(object sender, EventArgs e)
-        {
-            Process.Start(Assembly.GetExecutingAssembly().Location);
-        }
 
         private void OpenToolStripButton_Click(object sender, EventArgs e)
         {
@@ -344,9 +400,9 @@ namespace Hex_File_Analyzer
             {
                 ofd.Filter =
                     "Firmware (all types)|*.hex;*.eep;*.bin;*.elf;*.out;*.axf;*.o|" +
+                    "Bin files (*.bin)|*.bin|" +
                     "Hex Files (*.hex)|*.hex|" +
                     "Eep files (*.eep)|*.eep|" +
-                    "Bin files (*.bin)|*.bin|" +
                     "Elf files (*.elf)|*.elf|" +
                     "Out files (*.out)|*.out|" +
                     "Axf files (*.axf)|*.axf|" +
@@ -366,18 +422,22 @@ namespace Hex_File_Analyzer
             {
                 sfd.Filter =
                     "Hex files (*.hex)|*.hex|" +
-                    "Eep files (*.eep)|*.eep|" +
-                    "Binary files (*.bin)|*.bin|" +
+                    "Bin files (*.bin)|*.bin|" +
+                    "Srec files (*.srec)|*.srec|" +
                     "All files (*.*)|*.*";
-                sfd.FileName = Path.GetFileName(_currentfilename);
+                sfd.FileName = string.Concat(Path.GetFileNameWithoutExtension(_currentfilename), ".hex");
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        var ext = Path.GetExtension(sfd.FileName);
-                        _ihex.BytesPerRecord = _dataBytesPerRecord;
-                        if (string.Compare(ext, ".hex", true) == 0) _ihex.SaveIntelHex(sfd.FileName);
-                        else if (string.Compare(ext, ".bin", true) == 0) _ihex.SaveBinaryImage(sfd.FileName);
+                        ViewerClearText();
+                        ViewerAppendText("Converting file format...", Color.DarkMagenta);
+                        ViewerAppendText("Input file: " + Path.GetFileName(_currentfilename), Color.DarkMagenta);
+                        Application.DoEvents();
+                        _elfManager = new ElfManager(_currentfilename);
+                        var response = _elfManager.SaveOutputFile(sfd.FileName);
+                        ViewerAppendText(response);
+                        ViewerAppendText("Saved as  : " + Path.GetFileName(sfd.FileName), Color.DarkMagenta);
                     }
                     catch (Exception ex)
                     {
@@ -387,17 +447,75 @@ namespace Hex_File_Analyzer
             }
         }
 
-        private void ReloadToolStripButton_Click(object sender, EventArgs e)
+        private void DisassemblyToolStripButton_Click(object sender, EventArgs e)
         {
-            TryShowFileContent(_currentfilename);
+            Task.Run(() =>
+            {
+                try
+                {
+                    ViewerClearText();
+                    ViewerAppendText("Getting disassembly...", Color.DarkMagenta);
+                    _elfManager = new ElfManager(_currentfilename);
+                    ViewerAppendText(_elfManager.GetDisassemblyText());
+                }
+                catch (Exception ex)
+                {
+                    PopupException(ex.Message);
+                }
+            });
         }
 
-        private void HelpToolStripButton_Click(object sender, EventArgs e)
+        private void AboutToolStripButton_Click(object sender, EventArgs e)
         {
             var info = string.Format("{0} {1}\r\nDeveloped by: \r\nGSM Rana \r\ngithub.com/gsmrana",
                 Assembly.GetEntryAssembly().GetName().Name,
                 Assembly.GetEntryAssembly().GetName().Version);
             MessageBox.Show(info, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void ToolStripButtonCmdExecute_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var cli = toolStripComboBoxCmdline.Text.Trim();
+                var idx = cli.IndexOf(' ');
+                var toolname = cli;
+                var cmdline = "";
+                if (idx > 0)
+                {
+                    toolname = cli.Substring(0, idx);
+                    cmdline = cli.Substring(idx + 1, cli.Length - idx - 1);
+                    if (cmdline.Contains(SourceFileKeyword))
+                        cmdline = cmdline.Replace(SourceFileKeyword, string.Format("\"{0}\"", _currentfilename));
+                    if (cmdline.Contains(SourceDirKeyword))
+                        cmdline = cmdline.Replace(SourceDirKeyword, string.Format("\"{0}\"", Path.GetDirectoryName(_currentfilename)));
+                }
+                ViewerClearText();
+                ViewerAppendText(string.Format("Executing CLI: {0} {1}", toolname, cmdline), Color.DarkMagenta);
+                ViewerAppendText("---------------------------------------------------------------------------", Color.DarkMagenta);
+
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        var response = _elfManager.ExecuteCommandline(toolname, cmdline);
+                        ViewerAppendText(response);
+                    }
+                    catch (Exception ex)
+                    {
+                        PopupException(ex.Message);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                PopupException(ex.Message);
+            }
+        }
+
+        private void ToolStripButtonCopyText_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(richTextBoxExEventLog.Text);
         }
 
         #endregion
@@ -448,7 +566,11 @@ namespace Hex_File_Analyzer
             }
         }
 
+
+
+
         #endregion
+
 
     }
 }
