@@ -123,11 +123,12 @@ namespace Elf_File_Analyzer
         int _prevpercent = 0;
         private void UpdateProgress(int percent)
         {
-            if (percent == _prevpercent) return;
+            if (percent == _prevpercent)
+                return;
+            _prevpercent = percent;
             Invoke(new MethodInvoker(() =>
             {
                 toolStripProgressBar1.Value = percent;
-                _prevpercent = percent;
             }));
         }
 
@@ -145,19 +146,6 @@ namespace Elf_File_Analyzer
             else if (bytes >= 1024) str = string.Format("{0} [{1:0.00} KB]", bytes, bytes / 1024f);
             else str = string.Format("{0:0000} bytes", bytes); ;
             return str;
-        }
-
-        public static string ByteArrayToFormatedString(byte[] bytes)
-        {
-            var sb = new StringBuilder();
-            foreach (var item in bytes)
-            {
-                if (item == 10) sb.Append("<LF>");
-                else if (item == 13) sb.Append("<CR>");
-                else if (item < 32 || item > 126) sb.AppendFormat("<{0:X2}>", item);
-                else sb.AppendFormat("{0}", (char)item);
-            }
-            return sb.ToString();
         }
 
         public static string ByteArrayToHexString(byte[] bytes, string separator = "")
@@ -226,10 +214,10 @@ namespace Elf_File_Analyzer
                             ShowBinaryFile(_currentfilename);
                             break;
                         case FileFormat.IntelHex:
-
                             ShowHexFile(_currentfilename);
                             break;
                         case FileFormat.ElfFile:
+                        default:
                             _elfManager = new ElfManager(_currentfilename);
                             ViewerAppendText(_elfManager.GetSizeInfo());
                             ViewerAppendText(_elfManager.GetAllHeadersInfo());

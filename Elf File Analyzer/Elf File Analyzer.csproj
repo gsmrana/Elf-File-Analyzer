@@ -104,15 +104,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Tools\arm-none-eabi-objcopy.exe">
+    <Content Include="Tools\arm-none-eabi-objcopy.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Tools\arm-none-eabi-objdump.exe">
+    </Content>
+    <Content Include="Tools\arm-none-eabi-objdump.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Tools\arm-none-eabi-readelf.exe">
+    </Content>
+    <Content Include="Tools\arm-none-eabi-readelf.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Content Include="Tools\arm-none-eabi-size.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
