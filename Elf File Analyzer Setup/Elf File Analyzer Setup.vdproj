@@ -130,7 +130,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\ElfFileAnalyzerSetup.msi"
+        "OutputFilename" = "8:Debug\\Elf File Analyzer Setup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -162,7 +162,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\ElfFileAnalyzerSetup.msi"
+        "OutputFilename" = "8:Release\\Elf File Analyzer Setup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1226,7 +1226,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F400B9A04CE94C9D8FE6387493E3BA82"
             {
-            "SourcePath" = "8:..\\Elf File Analyzer\\obj\\Release\\Elf File Analyzer.exe"
+            "SourcePath" = "8:..\\Elf File Analyzer\\obj\\Debug\\Elf File Analyzer.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_711B4C4BC38046DBB57DFCC67EAC2EF1"
