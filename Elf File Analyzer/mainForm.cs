@@ -32,7 +32,7 @@ namespace Elf_File_Analyzer
 
         #region Data
 
-        bool _optInProgress;
+        bool _operationInProgress;
         bool _verifyChesksum;
         int _dataBytesPerRecord;
         string _currentfilename = "";
@@ -174,13 +174,14 @@ namespace Elf_File_Analyzer
 
         private void TryShowFileContent(string filename)
         {
-            if (_optInProgress)
+            if (string.IsNullOrEmpty(_currentfilename))
+                return;
+
+            if (_operationInProgress)
                 return;
 
             try
             {
-                if (!File.Exists(filename))
-                    throw new Exception("File not found!");
                 _currentfilename = filename;
                 _currntfileformat = GetFileFormat(filename);
                 UpdateFileContentToDisplay();
@@ -195,7 +196,7 @@ namespace Elf_File_Analyzer
         {
             Task.Run(() =>
             {
-                _optInProgress = true;
+                _operationInProgress = true;
                 Invoke(new MethodInvoker(() =>
                 {
                     UseWaitCursor = true;
@@ -206,8 +207,11 @@ namespace Elf_File_Analyzer
 
                 try
                 {
+                    UpdateProgress(0);
                     ViewerClearText();
                     ViewerAppendText(string.Format("File Size: {0}", GetSizeString(new FileInfo(_currentfilename).Length)), Color.DarkMagenta);
+                    UpdateProgress(10);
+
                     switch (_currntfileformat)
                     {
                         case FileFormat.Binary:
@@ -220,7 +224,9 @@ namespace Elf_File_Analyzer
                         default:
                             _elfManager = new ElfManager(_currentfilename);
                             ViewerAppendText(_elfManager.GetSizeInfo());
+                            UpdateProgress(20);
                             ViewerAppendText(_elfManager.GetAllHeadersInfo());
+                            UpdateProgress(100);
                             break;
                     }
                 }
@@ -234,7 +240,7 @@ namespace Elf_File_Analyzer
                     UseWaitCursor = false;
                     Cursor.Current = Cursors.Default;
                 }));
-                _optInProgress = false;
+                _operationInProgress = false;
             });
         }
 
@@ -344,11 +350,6 @@ namespace Elf_File_Analyzer
             richTextBoxExEventLog.Clear();
         }
 
-        private void ReloadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TryShowFileContent(_currentfilename);
-        }
-
         private void AutoscrollToolStripMenuItem_Click(object sender, EventArgs e)
         {
             richTextBoxExEventLog.Autoscroll = AutoscrollToolStripMenuItem.Checked;
@@ -365,17 +366,26 @@ namespace Elf_File_Analyzer
 
         private void GetSizeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try
+            if (string.IsNullOrEmpty(_currentfilename))
+                return;
+
+            Task.Run(() =>
             {
-                ViewerClearText();
-                ViewerAppendText(string.Format("File Size: {0}", GetSizeString(new FileInfo(_currentfilename).Length)), Color.DarkMagenta);
-                _elfManager = new ElfManager(_currentfilename);
-                ViewerAppendText(_elfManager.GetSizeInfo());
-            }
-            catch (Exception ex)
-            {
-                PopupException(ex.Message);
-            }
+                try
+                {
+                    UpdateProgress(0);
+                    ViewerClearText();
+                    ViewerAppendText(string.Format("File Size: {0}", GetSizeString(new FileInfo(_currentfilename).Length)), Color.DarkMagenta);
+                    _elfManager = new ElfManager(_currentfilename);
+                    UpdateProgress(10);
+                    ViewerAppendText(_elfManager.GetSizeInfo());
+                    UpdateProgress(100);
+                }
+                catch (Exception ex)
+                {
+                    PopupException(ex.Message);
+                }
+            });
         }
 
         private void ReadHeadersToolStripMenuItem_Click(object sender, EventArgs e)
@@ -385,7 +395,27 @@ namespace Elf_File_Analyzer
 
         private void GetDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DisassemblyToolStripButton_Click(sender, e);
+            if (string.IsNullOrEmpty(_currentfilename))
+                return;
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    UpdateProgress(0);
+                    ViewerClearText();
+                    ViewerAppendText(string.Format("File Size: {0}", GetSizeString(new FileInfo(_currentfilename).Length)), Color.DarkMagenta);
+                    ViewerAppendText("Getting disassembly...", Color.DarkMagenta);
+                    _elfManager = new ElfManager(_currentfilename);
+                    UpdateProgress(10);
+                    ViewerAppendText(_elfManager.GetDisassemblyText());
+                    UpdateProgress(100);
+                }
+                catch (Exception ex)
+                {
+                    PopupException(ex.Message);
+                }
+            });
         }
 
         #endregion
@@ -416,6 +446,9 @@ namespace Elf_File_Analyzer
 
         private void SaveToolStripButton_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(_currentfilename))
+                return;
+
             using (var sfd = new SaveFileDialog())
             {
                 sfd.Filter =
@@ -428,14 +461,18 @@ namespace Elf_File_Analyzer
                 {
                     try
                     {
+                        UpdateProgress(0);
                         ViewerClearText();
                         ViewerAppendText("Converting file format...", Color.DarkMagenta);
                         ViewerAppendText("Input file: " + Path.GetFileName(_currentfilename), Color.DarkMagenta);
                         Application.DoEvents();
                         _elfManager = new ElfManager(_currentfilename);
+                        UpdateProgress(10);
                         var response = _elfManager.SaveOutputFile(sfd.FileName);
+                        UpdateProgress(80);
                         ViewerAppendText(response);
                         ViewerAppendText("Saved as  : " + Path.GetFileName(sfd.FileName), Color.DarkMagenta);
+                        UpdateProgress(100);
                     }
                     catch (Exception ex)
                     {
@@ -447,20 +484,7 @@ namespace Elf_File_Analyzer
 
         private void DisassemblyToolStripButton_Click(object sender, EventArgs e)
         {
-            Task.Run(() =>
-            {
-                try
-                {
-                    ViewerClearText();
-                    ViewerAppendText("Getting disassembly...", Color.DarkMagenta);
-                    _elfManager = new ElfManager(_currentfilename);
-                    ViewerAppendText(_elfManager.GetDisassemblyText());
-                }
-                catch (Exception ex)
-                {
-                    PopupException(ex.Message);
-                }
-            });
+            GetDisassemblyToolStripMenuItem_Click(sender, e);
         }
 
         private void AboutToolStripButton_Click(object sender, EventArgs e)
@@ -476,28 +500,34 @@ namespace Elf_File_Analyzer
             try
             {
                 var cli = toolStripComboBoxCmdline.Text.Trim();
-                var idx = cli.IndexOf(' ');
-                var toolname = cli;
-                var cmdline = "";
-                if (idx > 0)
-                {
-                    toolname = cli.Substring(0, idx);
-                    cmdline = cli.Substring(idx + 1, cli.Length - idx - 1);
-                    if (cmdline.Contains(SourceFileKeyword))
-                        cmdline = cmdline.Replace(SourceFileKeyword, string.Format("\"{0}\"", _currentfilename));
-                    if (cmdline.Contains(SourceDirKeyword))
-                        cmdline = cmdline.Replace(SourceDirKeyword, string.Format("\"{0}\"", Path.GetDirectoryName(_currentfilename)));
-                }
-                ViewerClearText();
-                ViewerAppendText(string.Format("Executing CLI: {0} {1}", toolname, cmdline), Color.DarkMagenta);
-                ViewerAppendText("---------------------------------------------------------------------------", Color.DarkMagenta);
 
                 Task.Run(() =>
                 {
                     try
                     {
+                        var idx = cli.IndexOf(' ');
+                        var toolname = cli;
+                        var cmdline = "";
+                        if (idx > 0)
+                        {
+                            toolname = cli.Substring(0, idx);
+                            cmdline = cli.Substring(idx + 1, cli.Length - idx - 1);
+                            if (cmdline.Contains(SourceFileKeyword))
+                                cmdline = cmdline.Replace(SourceFileKeyword, string.Format("\"{0}\"", _currentfilename));
+                            if (cmdline.Contains(SourceDirKeyword))
+                                cmdline = cmdline.Replace(SourceDirKeyword, string.Format("\"{0}\"", Path.GetDirectoryName(_currentfilename)));
+                        }
+
+                        UpdateProgress(0);
+                        ViewerClearText();
+                        ViewerAppendText(string.Format("Executing CLI: {0} {1}", toolname, cmdline), Color.DarkMagenta);
+                        ViewerAppendText("---------------------------------------------------------------------------", Color.DarkMagenta);
+                        UpdateProgress(10);
+
                         var response = _elfManager.ExecuteCommandline(toolname, cmdline);
+                        UpdateProgress(80);
                         ViewerAppendText(response);
+                        UpdateProgress(100);
                     }
                     catch (Exception ex)
                     {
