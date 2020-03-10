@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Megamind.IO.FileFormat", ".
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Megamind.Num.Encode", "..\Megamind.Num.Encode\Megamind.Num.Encode.csproj", "{61A9897D-B192-4C33-B6B8-D5724691A2F4}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ElfFileAnalyzerSetup", "ElfFileAnalyzerSetup\ElfFileAnalyzerSetup.vdproj", "{1F68113B-DDC3-48A0-829F-BF9CF0A6F8CB}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Elf File Analyzer Setup", "Elf File Analyzer Setup\Elf File Analyzer Setup.vdproj", "{1F68113B-DDC3-48A0-829F-BF9CF0A6F8CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
