@@ -50,14 +50,6 @@
             this.customizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aTmelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sTM32ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.bytesPerRecordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataBlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ascendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.descendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verifyChecksumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -202,7 +194,7 @@
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.clearToolStripMenuItem.Text = "Clear Display";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.ClearToolStripMenuItem_Click);
             // 
@@ -210,7 +202,7 @@
             // 
             this.AutoscrollToolStripMenuItem.CheckOnClick = true;
             this.AutoscrollToolStripMenuItem.Name = "AutoscrollToolStripMenuItem";
-            this.AutoscrollToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.AutoscrollToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.AutoscrollToolStripMenuItem.Text = "Autoscroll";
             this.AutoscrollToolStripMenuItem.Click += new System.EventHandler(this.AutoscrollToolStripMenuItem_Click);
             // 
@@ -227,21 +219,21 @@
             // getSizeToolStripMenuItem
             // 
             this.getSizeToolStripMenuItem.Name = "getSizeToolStripMenuItem";
-            this.getSizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.getSizeToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.getSizeToolStripMenuItem.Text = "Get Size Info";
             this.getSizeToolStripMenuItem.Click += new System.EventHandler(this.GetSizeToolStripMenuItem_Click);
             // 
             // readHeadersToolStripMenuItem
             // 
             this.readHeadersToolStripMenuItem.Name = "readHeadersToolStripMenuItem";
-            this.readHeadersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.readHeadersToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.readHeadersToolStripMenuItem.Text = "Read Headers";
             this.readHeadersToolStripMenuItem.Click += new System.EventHandler(this.ReadHeadersToolStripMenuItem_Click);
             // 
             // getDisassemblyToolStripMenuItem
             // 
             this.getDisassemblyToolStripMenuItem.Name = "getDisassemblyToolStripMenuItem";
-            this.getDisassemblyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.getDisassemblyToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.getDisassemblyToolStripMenuItem.Text = "Get Disassembly";
             this.getDisassemblyToolStripMenuItem.Click += new System.EventHandler(this.GetDisassemblyToolStripMenuItem_Click);
             // 
@@ -249,9 +241,6 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.customizeToolStripMenuItem,
-            this.toolStripSeparator5,
-            this.bytesPerRecordToolStripMenuItem,
-            this.dataBlockToolStripMenuItem,
             this.verifyChecksumToolStripMenuItem,
             this.toolStripSeparator3,
             this.optionsToolStripMenuItem});
@@ -281,66 +270,8 @@
             this.sTM32ToolStripMenuItem.CheckOnClick = true;
             this.sTM32ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.sTM32ToolStripMenuItem.Name = "sTM32ToolStripMenuItem";
-            this.sTM32ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sTM32ToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.sTM32ToolStripMenuItem.Text = "STM32";
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(168, 6);
-            // 
-            // bytesPerRecordToolStripMenuItem
-            // 
-            this.bytesPerRecordToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3});
-            this.bytesPerRecordToolStripMenuItem.Name = "bytesPerRecordToolStripMenuItem";
-            this.bytesPerRecordToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.bytesPerRecordToolStripMenuItem.Text = "Bytes Per Record";
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(86, 22);
-            this.toolStripMenuItem2.Text = "16";
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Checked = true;
-            this.toolStripMenuItem3.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem3.Text = "32";
-            // 
-            // dataBlockToolStripMenuItem
-            // 
-            this.dataBlockToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.noneToolStripMenuItem,
-            this.ascendingToolStripMenuItem,
-            this.descendingToolStripMenuItem});
-            this.dataBlockToolStripMenuItem.Name = "dataBlockToolStripMenuItem";
-            this.dataBlockToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.dataBlockToolStripMenuItem.Text = "Data Block Sorting";
-            // 
-            // noneToolStripMenuItem
-            // 
-            this.noneToolStripMenuItem.Checked = true;
-            this.noneToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
-            this.noneToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.noneToolStripMenuItem.Text = "None";
-            // 
-            // ascendingToolStripMenuItem
-            // 
-            this.ascendingToolStripMenuItem.Name = "ascendingToolStripMenuItem";
-            this.ascendingToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.ascendingToolStripMenuItem.Text = "Ascending";
-            // 
-            // descendingToolStripMenuItem
-            // 
-            this.descendingToolStripMenuItem.Name = "descendingToolStripMenuItem";
-            this.descendingToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.descendingToolStripMenuItem.Text = "Descending";
             // 
             // verifyChecksumToolStripMenuItem
             // 
@@ -349,7 +280,7 @@
             this.disableToolStripMenuItem});
             this.verifyChecksumToolStripMenuItem.Name = "verifyChecksumToolStripMenuItem";
             this.verifyChecksumToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.verifyChecksumToolStripMenuItem.Text = "Verify Checksum";
+            this.verifyChecksumToolStripMenuItem.Text = "&Verify Checksum";
             // 
             // enableToolStripMenuItem
             // 
@@ -362,18 +293,18 @@
             // disableToolStripMenuItem
             // 
             this.disableToolStripMenuItem.Name = "disableToolStripMenuItem";
-            this.disableToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.disableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.disableToolStripMenuItem.Text = "Disable";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(168, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // helpToolStripMenuItem
@@ -652,14 +583,6 @@
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem bytesPerRecordToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem dataBlockToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem noneToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ascendingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem descendingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem verifyChecksumToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disableToolStripMenuItem;

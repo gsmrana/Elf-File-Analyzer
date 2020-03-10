@@ -34,7 +34,6 @@ namespace Elf_File_Analyzer
 
         bool _operationInProgress;
         bool _verifyChesksum;
-        int _dataBytesPerRecord;
         string _currentfilename = "";
         FileFormat _currntfileformat;
         IntelHex _ihex = new IntelHex();
@@ -84,8 +83,6 @@ namespace Elf_File_Analyzer
             try
             {
                 _verifyChesksum = Convert.ToInt32(ConfigurationManager.AppSettings["VerifyChecksum"]) > 0;
-                _dataBytesPerRecord = Convert.ToInt32(ConfigurationManager.AppSettings["DataBytesPerRecord"]);
-
                 var args = Environment.GetCommandLineArgs();
                 if (args.Length > 1)
                 {
@@ -174,7 +171,7 @@ namespace Elf_File_Analyzer
 
         private void TryShowFileContent(string filename)
         {
-            if (string.IsNullOrEmpty(_currentfilename))
+            if (string.IsNullOrEmpty(filename))
                 return;
 
             if (_operationInProgress)
