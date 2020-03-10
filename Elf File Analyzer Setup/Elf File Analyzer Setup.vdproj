@@ -16,13 +16,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_4EC595A99C8F76D298C3528BF5D2D130"
-        "OwnerKey" = "8:_9D541E08426BC8D1B0B7EB09B4C1E14A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4EC595A99C8F76D298C3528BF5D2D130"
+        "MsmKey" = "8:_59BEA7E2CAC0F3170EF413D90DFCEB5F"
         "OwnerKey" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -40,7 +34,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9D541E08426BC8D1B0B7EB09B4C1E14A"
+        "MsmKey" = "8:_A46BCF34CAE43239C0CB00517BFD4CF3"
+        "OwnerKey" = "8:_59BEA7E2CAC0F3170EF413D90DFCEB5F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A46BCF34CAE43239C0CB00517BFD4CF3"
         "OwnerKey" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -53,13 +53,13 @@
         "Entry"
         {
         "MsmKey" = "8:_C785FAB24049050237E5EE4B03D9145F"
-        "OwnerKey" = "8:_4EC595A99C8F76D298C3528BF5D2D130"
+        "OwnerKey" = "8:_A46BCF34CAE43239C0CB00517BFD4CF3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_C785FAB24049050237E5EE4B03D9145F"
-        "OwnerKey" = "8:_9D541E08426BC8D1B0B7EB09B4C1E14A"
+        "OwnerKey" = "8:_59BEA7E2CAC0F3170EF413D90DFCEB5F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -217,20 +217,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4EC595A99C8F76D298C3528BF5D2D130"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_59BEA7E2CAC0F3170EF413D90DFCEB5F"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Megamind.Num.Encode, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Megamind.IO.FileFormat, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4EC595A99C8F76D298C3528BF5D2D130"
+                    "_59BEA7E2CAC0F3170EF413D90DFCEB5F"
                     {
-                    "Name" = "8:Megamind.Num.Encode.dll"
+                    "Name" = "8:Megamind.IO.FileFormat.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Megamind.Num.Encode.dll"
+            "SourcePath" = "8:Megamind.IO.FileFormat.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_711B4C4BC38046DBB57DFCC67EAC2EF1"
@@ -310,20 +310,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9D541E08426BC8D1B0B7EB09B4C1E14A"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A46BCF34CAE43239C0CB00517BFD4CF3"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Megamind.IO.FileFormat, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Megamind.Num.Encode, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_9D541E08426BC8D1B0B7EB09B4C1E14A"
+                    "_A46BCF34CAE43239C0CB00517BFD4CF3"
                     {
-                    "Name" = "8:Megamind.IO.FileFormat.dll"
+                    "Name" = "8:Megamind.Num.Encode.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Megamind.IO.FileFormat.dll"
+            "SourcePath" = "8:Megamind.Num.Encode.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_711B4C4BC38046DBB57DFCC67EAC2EF1"
@@ -437,11 +437,11 @@
         }
         "FileType"
         {
-            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_1B1074D7EDC04F96924CC9D0AF58641E"
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_263715F1981442C88A4BADBAF1010285"
             {
-            "Name" = "8:Axf"
+            "Name" = "8:Firmware Files"
             "Description" = "8:"
-            "Extensions" = "8:axf"
+            "Extensions" = "8:hex,eep,bin,elf,out,axf,o"
             "MIME" = "8:"
             "Icon" = "8:"
             "IconIndex" = "3:0"
@@ -451,145 +451,7 @@
                 }
                 "Verbs"
                 {
-                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_C88C55A0A1E54C9F99A4463DD037B2AA"
-                    {
-                    "Command" = "8:&Open"
-                    "Verb" = "8:open"
-                    "Arguments" = "8:\"%1\""
-                    "Order" = "3:0"
-                    }
-                }
-            }
-            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_1DCF17E43BB0453EA5C11D26E4FACA75"
-            {
-            "Name" = "8:Elf"
-            "Description" = "8:"
-            "Extensions" = "8:elf"
-            "MIME" = "8:"
-            "Icon" = "8:"
-            "IconIndex" = "3:0"
-                "Command"
-                {
-                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
-                }
-                "Verbs"
-                {
-                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_4D38A8344E5C4AA2A84261471667A665"
-                    {
-                    "Command" = "8:&Open"
-                    "Verb" = "8:open"
-                    "Arguments" = "8:\"%1\""
-                    "Order" = "3:0"
-                    }
-                }
-            }
-            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_3701FE00945B409BBFC7AE7318DD0EF7"
-            {
-            "Name" = "8:Eeprom"
-            "Description" = "8:"
-            "Extensions" = "8:eep"
-            "MIME" = "8:"
-            "Icon" = "8:"
-            "IconIndex" = "3:0"
-                "Command"
-                {
-                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
-                }
-                "Verbs"
-                {
-                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_6096A99BE27B455783D9A6DA63587894"
-                    {
-                    "Command" = "8:&Open"
-                    "Verb" = "8:open"
-                    "Arguments" = "8:\"%1\""
-                    "Order" = "3:0"
-                    }
-                }
-            }
-            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_3890231C1FEF4EDDA7FFDA8F1DF7720B"
-            {
-            "Name" = "8:Binary"
-            "Description" = "8:"
-            "Extensions" = "8:bin"
-            "MIME" = "8:"
-            "Icon" = "8:"
-            "IconIndex" = "3:0"
-                "Command"
-                {
-                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
-                }
-                "Verbs"
-                {
-                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_DEC9A5122C1F46AF9C22CB59CDF1CAB6"
-                    {
-                    "Command" = "8:&Open"
-                    "Verb" = "8:open"
-                    "Arguments" = "8:\"%1\""
-                    "Order" = "3:0"
-                    }
-                }
-            }
-            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_7ACE2D257CBE45E9A983B9CFBACCBB3D"
-            {
-            "Name" = "8:Object"
-            "Description" = "8:"
-            "Extensions" = "8:o"
-            "MIME" = "8:"
-            "Icon" = "8:"
-            "IconIndex" = "3:0"
-                "Command"
-                {
-                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
-                }
-                "Verbs"
-                {
-                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_392CBC4F8B184D2CAB4030E377A8BCDE"
-                    {
-                    "Command" = "8:&Open"
-                    "Verb" = "8:open"
-                    "Arguments" = "8:\"%1\""
-                    "Order" = "3:0"
-                    }
-                }
-            }
-            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_88B124CC909C4FC3815402086AB1368B"
-            {
-            "Name" = "8:Hex"
-            "Description" = "8:"
-            "Extensions" = "8:hex"
-            "MIME" = "8:"
-            "Icon" = "8:"
-            "IconIndex" = "3:0"
-                "Command"
-                {
-                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
-                }
-                "Verbs"
-                {
-                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_60CFC57D06DE4935B6746ABAC5755D73"
-                    {
-                    "Command" = "8:&Open"
-                    "Verb" = "8:open"
-                    "Arguments" = "8:\"%1\""
-                    "Order" = "3:0"
-                    }
-                }
-            }
-            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_CFF929EC1B85452FB3AE8FA3445FB4B5"
-            {
-            "Name" = "8:Out"
-            "Description" = "8:"
-            "Extensions" = "8:out"
-            "MIME" = "8:"
-            "Icon" = "8:"
-            "IconIndex" = "3:0"
-                "Command"
-                {
-                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
-                }
-                "Verbs"
-                {
-                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_680979DE1F604ACD9FA4C8D46F18BEA8"
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_BE83E149DCF74DE99706434D7E2740F7"
                     {
                     "Command" = "8:&Open"
                     "Verb" = "8:open"
@@ -680,8 +542,8 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:https://github.com/gsmrana"
-        "ARPPRODUCTICON" = "8:"
-        "ARPIconIndex" = "3:0"
+        "ARPPRODUCTICON" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
+        "ARPIconIndex" = "3:32512"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
