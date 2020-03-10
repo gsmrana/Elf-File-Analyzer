@@ -147,6 +147,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -429,6 +437,167 @@
         }
         "FileType"
         {
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_1B1074D7EDC04F96924CC9D0AF58641E"
+            {
+            "Name" = "8:Axf"
+            "Description" = "8:"
+            "Extensions" = "8:axf"
+            "MIME" = "8:"
+            "Icon" = "8:"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_C88C55A0A1E54C9F99A4463DD037B2AA"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_1DCF17E43BB0453EA5C11D26E4FACA75"
+            {
+            "Name" = "8:Elf"
+            "Description" = "8:"
+            "Extensions" = "8:elf"
+            "MIME" = "8:"
+            "Icon" = "8:"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_4D38A8344E5C4AA2A84261471667A665"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_3701FE00945B409BBFC7AE7318DD0EF7"
+            {
+            "Name" = "8:Eeprom"
+            "Description" = "8:"
+            "Extensions" = "8:eep"
+            "MIME" = "8:"
+            "Icon" = "8:"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_6096A99BE27B455783D9A6DA63587894"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_3890231C1FEF4EDDA7FFDA8F1DF7720B"
+            {
+            "Name" = "8:Binary"
+            "Description" = "8:"
+            "Extensions" = "8:bin"
+            "MIME" = "8:"
+            "Icon" = "8:"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_DEC9A5122C1F46AF9C22CB59CDF1CAB6"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_7ACE2D257CBE45E9A983B9CFBACCBB3D"
+            {
+            "Name" = "8:Object"
+            "Description" = "8:"
+            "Extensions" = "8:o"
+            "MIME" = "8:"
+            "Icon" = "8:"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_392CBC4F8B184D2CAB4030E377A8BCDE"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_88B124CC909C4FC3815402086AB1368B"
+            {
+            "Name" = "8:Hex"
+            "Description" = "8:"
+            "Extensions" = "8:hex"
+            "MIME" = "8:"
+            "Icon" = "8:"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_60CFC57D06DE4935B6746ABAC5755D73"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_CFF929EC1B85452FB3AE8FA3445FB4B5"
+            {
+            "Name" = "8:Out"
+            "Description" = "8:"
+            "Extensions" = "8:out"
+            "MIME" = "8:"
+            "Icon" = "8:"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_F400B9A04CE94C9D8FE6387493E3BA82"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_680979DE1F604ACD9FA4C8D46F18BEA8"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
         }
         "Folder"
         {
