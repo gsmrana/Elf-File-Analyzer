@@ -46,7 +46,7 @@ namespace Elf_File_Analyzer
         {
             { FileFormat.Binary,   new[] { ".bin" } },
             { FileFormat.IntelHex, new[] { ".hex", ".eep" } },
-            { FileFormat.ElfFile,  new[] { ".elf", ".out", ".axf", ".o" } },
+            { FileFormat.ElfFile,  new[] { ".elf", ".out", ".axf", ".a", ".o" } },
         };
 
         #endregion
@@ -431,6 +431,7 @@ namespace Elf_File_Analyzer
                     "Elf files (*.elf)|*.elf|" +
                     "Out files (*.out)|*.out|" +
                     "Axf files (*.axf)|*.axf|" +
+                    "Lib files (*.a)|*.a|" +
                     "Obj files (*.o)|*.o|" +
                     "All files (*.*)|*.*";
                 if (ofd.ShowDialog() == DialogResult.OK)
@@ -591,10 +592,6 @@ namespace Elf_File_Analyzer
                 TryShowFileContent(files[0]);
             }
         }
-
-
-
-
 
         #endregion
 

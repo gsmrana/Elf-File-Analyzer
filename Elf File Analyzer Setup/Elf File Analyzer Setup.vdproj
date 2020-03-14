@@ -441,7 +441,7 @@
             {
             "Name" = "8:Firmware Files"
             "Description" = "8:"
-            "Extensions" = "8:hex,eep,bin,elf,out,axf,o"
+            "Extensions" = "8:hex,eep,bin,elf,out,axf,a,o"
             "MIME" = "8:"
             "Icon" = "8:"
             "IconIndex" = "3:0"
