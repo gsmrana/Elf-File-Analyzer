@@ -81,6 +81,7 @@
             this.toolStripStatusLabelStart = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelSel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelLength = new System.Windows.Forms.ToolStripStatusLabel();
+            this.openAsBinaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -211,7 +212,8 @@
             this.operationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.getSizeToolStripMenuItem,
             this.readHeadersToolStripMenuItem,
-            this.getDisassemblyToolStripMenuItem});
+            this.getDisassemblyToolStripMenuItem,
+            this.openAsBinaryToolStripMenuItem});
             this.operationToolStripMenuItem.Name = "operationToolStripMenuItem";
             this.operationToolStripMenuItem.Size = new System.Drawing.Size(72, 18);
             this.operationToolStripMenuItem.Text = "&Operation";
@@ -219,21 +221,21 @@
             // getSizeToolStripMenuItem
             // 
             this.getSizeToolStripMenuItem.Name = "getSizeToolStripMenuItem";
-            this.getSizeToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.getSizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.getSizeToolStripMenuItem.Text = "Get Size Info";
-            this.getSizeToolStripMenuItem.Click += new System.EventHandler(this.GetSizeToolStripMenuItem_Click);
+            this.getSizeToolStripMenuItem.Click += new System.EventHandler(this.GetSizeInfoToolStripMenuItem_Click);
             // 
             // readHeadersToolStripMenuItem
             // 
             this.readHeadersToolStripMenuItem.Name = "readHeadersToolStripMenuItem";
-            this.readHeadersToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.readHeadersToolStripMenuItem.Text = "Read Headers";
-            this.readHeadersToolStripMenuItem.Click += new System.EventHandler(this.ReadHeadersToolStripMenuItem_Click);
+            this.readHeadersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.readHeadersToolStripMenuItem.Text = "Get Elf Headers";
+            this.readHeadersToolStripMenuItem.Click += new System.EventHandler(this.GetElfHeadersToolStripMenuItem_Click);
             // 
             // getDisassemblyToolStripMenuItem
             // 
             this.getDisassemblyToolStripMenuItem.Name = "getDisassemblyToolStripMenuItem";
-            this.getDisassemblyToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.getDisassemblyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.getDisassemblyToolStripMenuItem.Text = "Get Disassembly";
             this.getDisassemblyToolStripMenuItem.Click += new System.EventHandler(this.GetDisassemblyToolStripMenuItem_Click);
             // 
@@ -254,7 +256,7 @@
             this.aTmelToolStripMenuItem,
             this.sTM32ToolStripMenuItem});
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.customizeToolStripMenuItem.Text = "&CLI Toolset";
             // 
             // aTmelToolStripMenuItem
@@ -279,7 +281,7 @@
             this.enableToolStripMenuItem,
             this.disableToolStripMenuItem});
             this.verifyChecksumToolStripMenuItem.Name = "verifyChecksumToolStripMenuItem";
-            this.verifyChecksumToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.verifyChecksumToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.verifyChecksumToolStripMenuItem.Text = "&Verify Checksum";
             // 
             // enableToolStripMenuItem
@@ -287,24 +289,24 @@
             this.enableToolStripMenuItem.Checked = true;
             this.enableToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.enableToolStripMenuItem.Name = "enableToolStripMenuItem";
-            this.enableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.enableToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.enableToolStripMenuItem.Text = "Enable";
             // 
             // disableToolStripMenuItem
             // 
             this.disableToolStripMenuItem.Name = "disableToolStripMenuItem";
-            this.disableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.disableToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.disableToolStripMenuItem.Text = "Disable";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(159, 6);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // helpToolStripMenuItem
@@ -525,6 +527,13 @@
             this.toolStripStatusLabelLength.Size = new System.Drawing.Size(56, 15);
             this.toolStripStatusLabelLength.Text = "Length: 0";
             // 
+            // openAsBinaryToolStripMenuItem
+            // 
+            this.openAsBinaryToolStripMenuItem.Name = "openAsBinaryToolStripMenuItem";
+            this.openAsBinaryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openAsBinaryToolStripMenuItem.Text = "Open as Binary";
+            this.openAsBinaryToolStripMenuItem.Click += new System.EventHandler(this.OpenAsBinaryToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -608,6 +617,7 @@
         private System.Windows.Forms.ToolStripMenuItem getDisassemblyToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem getSizeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openAsBinaryToolStripMenuItem;
     }
 }
 

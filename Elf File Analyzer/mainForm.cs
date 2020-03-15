@@ -86,7 +86,7 @@ namespace Elf_File_Analyzer
                 var args = Environment.GetCommandLineArgs();
                 if (args.Length > 1)
                 {
-                    TryShowFileContent(args[1]);
+                    TryShowFileContent(args[1], GetFileFormatFromExt(args[1]));
                 }
             }
             catch (Exception ex)
@@ -129,7 +129,7 @@ namespace Elf_File_Analyzer
             }));
         }
 
-        private static FileFormat GetFileFormat(string filename)
+        private static FileFormat GetFileFormatFromExt(string filename)
         {
             var ext = Path.GetExtension(filename).ToLower();
             var filetype = SupportedFileList.FirstOrDefault(p => p.Value.Contains(ext));
@@ -169,7 +169,7 @@ namespace Elf_File_Analyzer
             }));
         }
 
-        private void TryShowFileContent(string filename)
+        private void TryShowFileContent(string filename, FileFormat decodeas)
         {
             if (string.IsNullOrEmpty(filename))
                 return;
@@ -180,7 +180,7 @@ namespace Elf_File_Analyzer
             try
             {
                 _currentfilename = filename;
-                _currntfileformat = GetFileFormat(filename);
+                _currntfileformat = decodeas;
                 UpdateFileContentToDisplay();
             }
             catch (Exception ex)
@@ -361,7 +361,7 @@ namespace Elf_File_Analyzer
 
         #region Menu Strip Operation
 
-        private void GetSizeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GetSizeInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_currentfilename))
                 return;
@@ -385,9 +385,9 @@ namespace Elf_File_Analyzer
             });
         }
 
-        private void ReadHeadersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GetElfHeadersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TryShowFileContent(_currentfilename);
+            TryShowFileContent(_currentfilename, FileFormat.ElfFile);
         }
 
         private void GetDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -415,6 +415,12 @@ namespace Elf_File_Analyzer
             });
         }
 
+
+        private void OpenAsBinaryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryShowFileContent(_currentfilename, FileFormat.Binary);
+        }
+
         #endregion
 
         #region ToolStrip Events
@@ -437,7 +443,7 @@ namespace Elf_File_Analyzer
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     _currentfilename = ofd.FileName;
-                    TryShowFileContent(_currentfilename);
+                    TryShowFileContent(_currentfilename, GetFileFormatFromExt(_currentfilename));
                 }
             }
         }
@@ -589,7 +595,7 @@ namespace Elf_File_Analyzer
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                TryShowFileContent(files[0]);
+                TryShowFileContent(files[0], GetFileFormatFromExt(files[0]));
             }
         }
 
