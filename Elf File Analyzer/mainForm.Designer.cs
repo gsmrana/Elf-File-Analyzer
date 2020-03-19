@@ -46,6 +46,9 @@
             this.getSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.readHeadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getDisassemblyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.openAsTextFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openAsBinaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aTmelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,7 +84,6 @@
             this.toolStripStatusLabelStart = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelSel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelLength = new System.Windows.Forms.ToolStripStatusLabel();
-            this.openAsBinaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -213,6 +215,8 @@
             this.getSizeToolStripMenuItem,
             this.readHeadersToolStripMenuItem,
             this.getDisassemblyToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.openAsTextFileToolStripMenuItem,
             this.openAsBinaryToolStripMenuItem});
             this.operationToolStripMenuItem.Name = "operationToolStripMenuItem";
             this.operationToolStripMenuItem.Size = new System.Drawing.Size(72, 18);
@@ -238,6 +242,25 @@
             this.getDisassemblyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.getDisassemblyToolStripMenuItem.Text = "Get Disassembly";
             this.getDisassemblyToolStripMenuItem.Click += new System.EventHandler(this.GetDisassemblyToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            // 
+            // openAsTextFileToolStripMenuItem
+            // 
+            this.openAsTextFileToolStripMenuItem.Name = "openAsTextFileToolStripMenuItem";
+            this.openAsTextFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openAsTextFileToolStripMenuItem.Text = "Open As Text File";
+            this.openAsTextFileToolStripMenuItem.Click += new System.EventHandler(this.OpenAsTextFileToolStripMenuItem_Click);
+            // 
+            // openAsBinaryToolStripMenuItem
+            // 
+            this.openAsBinaryToolStripMenuItem.Name = "openAsBinaryToolStripMenuItem";
+            this.openAsBinaryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openAsBinaryToolStripMenuItem.Text = "Open As Binary File";
+            this.openAsBinaryToolStripMenuItem.Click += new System.EventHandler(this.OpenAsBinaryToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -527,13 +550,6 @@
             this.toolStripStatusLabelLength.Size = new System.Drawing.Size(56, 15);
             this.toolStripStatusLabelLength.Text = "Length: 0";
             // 
-            // openAsBinaryToolStripMenuItem
-            // 
-            this.openAsBinaryToolStripMenuItem.Name = "openAsBinaryToolStripMenuItem";
-            this.openAsBinaryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.openAsBinaryToolStripMenuItem.Text = "Open as Binary";
-            this.openAsBinaryToolStripMenuItem.Click += new System.EventHandler(this.OpenAsBinaryToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -618,6 +634,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem getSizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openAsBinaryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem openAsTextFileToolStripMenuItem;
     }
 }
 

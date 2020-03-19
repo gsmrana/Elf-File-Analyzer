@@ -359,7 +359,7 @@ namespace Elf_File_Analyzer
 
         #endregion
 
-        #region Menu Strip Operation
+        #region Operation Menu Strip 
 
         private void GetSizeInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -406,6 +406,29 @@ namespace Elf_File_Analyzer
                     _elfManager = new ElfManager(_currentfilename);
                     UpdateProgress(10);
                     ViewerAppendText(_elfManager.GetDisassemblyText());
+                    UpdateProgress(100);
+                }
+                catch (Exception ex)
+                {
+                    PopupException(ex.Message);
+                }
+            });
+        }
+
+        private void OpenAsTextFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_currentfilename))
+                return;
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    UpdateProgress(0);
+                    ViewerClearText();
+                    ViewerAppendText(string.Format("File Size: {0}", GetSizeString(new FileInfo(_currentfilename).Length)), Color.DarkMagenta);
+                    UpdateProgress(10);
+                    ViewerAppendText(File.ReadAllText(_currentfilename));
                     UpdateProgress(100);
                 }
                 catch (Exception ex)
