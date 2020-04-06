@@ -84,6 +84,7 @@
             this.toolStripStatusLabelStart = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelSel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelLength = new System.Windows.Forms.ToolStripStatusLabel();
+            this.openAsHexFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -217,7 +218,8 @@
             this.getDisassemblyToolStripMenuItem,
             this.toolStripSeparator5,
             this.openAsTextFileToolStripMenuItem,
-            this.openAsBinaryToolStripMenuItem});
+            this.openAsBinaryToolStripMenuItem,
+            this.openAsHexFileToolStripMenuItem});
             this.operationToolStripMenuItem.Name = "operationToolStripMenuItem";
             this.operationToolStripMenuItem.Size = new System.Drawing.Size(72, 18);
             this.operationToolStripMenuItem.Text = "&Operation";
@@ -550,6 +552,13 @@
             this.toolStripStatusLabelLength.Size = new System.Drawing.Size(56, 15);
             this.toolStripStatusLabelLength.Text = "Length: 0";
             // 
+            // openAsHexFileToolStripMenuItem
+            // 
+            this.openAsHexFileToolStripMenuItem.Name = "openAsHexFileToolStripMenuItem";
+            this.openAsHexFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openAsHexFileToolStripMenuItem.Text = "Open As Hex File";
+            this.openAsHexFileToolStripMenuItem.Click += new System.EventHandler(this.OpenAsHexFileToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -636,6 +645,7 @@
         private System.Windows.Forms.ToolStripMenuItem openAsBinaryToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem openAsTextFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openAsHexFileToolStripMenuItem;
     }
 }
 

@@ -23,6 +23,7 @@ namespace Elf_File_Analyzer
         public enum FileFormat
         {
             Unknown,
+            Text,
             Binary,
             IntelHex,
             ElfFile
@@ -44,6 +45,7 @@ namespace Elf_File_Analyzer
         readonly string CmdlineToolBuildinpath = "Tools";
         static readonly Dictionary<FileFormat, string[]> SupportedFileList = new Dictionary<FileFormat, string[]>
         {
+            { FileFormat.Text,     new[] { ".txt" } },
             { FileFormat.Binary,   new[] { ".bin" } },
             { FileFormat.IntelHex, new[] { ".hex", ".eep" } },
             { FileFormat.ElfFile,  new[] { ".elf", ".out", ".axf", ".a", ".o" } },
@@ -62,6 +64,8 @@ namespace Elf_File_Analyzer
         {
             try
             {
+                ElfManager.CmdlineExecTimeoutSec = 30;
+
                 richTextBoxExEventLog.WordWrap = false;
                 richTextBoxExEventLog.Autoscroll = false;
                 richTextBoxExEventLog.ForeColor = Color.Blue;
@@ -181,7 +185,7 @@ namespace Elf_File_Analyzer
             {
                 _currentfilename = filename;
                 _currntfileformat = decodeas;
-                UpdateFileContentToDisplay();
+                RunShowFileContentThread();
             }
             catch (Exception ex)
             {
@@ -189,7 +193,7 @@ namespace Elf_File_Analyzer
             }
         }
 
-        private void UpdateFileContentToDisplay()
+        private void RunShowFileContentThread()
         {
             Task.Run(() =>
             {
@@ -211,11 +215,14 @@ namespace Elf_File_Analyzer
 
                     switch (_currntfileformat)
                     {
+                        case FileFormat.Text:
+                            ShowTextFileHandler(_currentfilename);
+                            break;
                         case FileFormat.Binary:
-                            ShowBinaryFile(_currentfilename);
+                            ShowBinaryFileHandler(_currentfilename);
                             break;
                         case FileFormat.IntelHex:
-                            ShowHexFile(_currentfilename);
+                            ShowHexFileHandler(_currentfilename);
                             break;
                         case FileFormat.ElfFile:
                         default:
@@ -241,7 +248,17 @@ namespace Elf_File_Analyzer
             });
         }
 
-        private void ShowBinaryFile(string filename)
+        private void ShowTextFileHandler(string filename)
+        {
+            UpdateProgress(0);
+            ViewerClearText();
+            ViewerAppendText(string.Format("File Size: {0}", GetSizeString(new FileInfo(filename).Length)), Color.DarkMagenta);
+            UpdateProgress(10);
+            ViewerAppendText(File.ReadAllText(filename));
+            UpdateProgress(100);
+        }
+
+        private void ShowBinaryFileHandler(string filename)
         {
             var bytes = File.ReadAllBytes(filename);
             var offset = 0;
@@ -263,7 +280,7 @@ namespace Elf_File_Analyzer
             UpdateProgress(100);
         }
 
-        private void ShowHexFile(string filename)
+        private void ShowHexFileHandler(string filename)
         {
             _ihex = new IntelHex();
             _ihex.Read(filename, _verifyChesksum);
@@ -417,31 +434,18 @@ namespace Elf_File_Analyzer
 
         private void OpenAsTextFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_currentfilename))
-                return;
-
-            Task.Run(() =>
-            {
-                try
-                {
-                    UpdateProgress(0);
-                    ViewerClearText();
-                    ViewerAppendText(string.Format("File Size: {0}", GetSizeString(new FileInfo(_currentfilename).Length)), Color.DarkMagenta);
-                    UpdateProgress(10);
-                    ViewerAppendText(File.ReadAllText(_currentfilename));
-                    UpdateProgress(100);
-                }
-                catch (Exception ex)
-                {
-                    PopupException(ex.Message);
-                }
-            });
+            TryShowFileContent(_currentfilename, FileFormat.Text);
         }
 
 
         private void OpenAsBinaryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TryShowFileContent(_currentfilename, FileFormat.Binary);
+        }
+
+        private void OpenAsHexFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TryShowFileContent(_currentfilename, FileFormat.IntelHex);
         }
 
         #endregion
